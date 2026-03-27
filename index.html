@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VOID CANVAS</title>
-<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;700&family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -46,21 +46,25 @@ body {
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 95vw;
 }
 .btn {
   font-family: 'Orbitron', sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   color: #00ff88;
   background: rgba(0,255,136,0.07);
   border: 1px solid rgba(0,255,136,0.3);
   border-radius: 2px;
-  padding: 8px 14px;
+  padding: 7px 11px;
   cursor: pointer;
   letter-spacing: 1px;
-  transition: all 0.2s;
+  transition: all 0.15s;
+  white-space: nowrap;
 }
 .btn:hover {
   background: rgba(0,255,136,0.15);
@@ -82,13 +86,19 @@ body {
   border-color: #D4A853;
   box-shadow: 0 0 14px rgba(212,168,83,0.3);
 }
+.btn-gold.active {
+  background: rgba(212,168,83,0.2);
+  border-color: #D4A853;
+  box-shadow: 0 0 18px rgba(212,168,83,0.4);
+}
 #mode-label {
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 9px;
   color: rgba(255,255,255,0.4);
   letter-spacing: 2px;
-  padding: 8px;
+  padding: 7px;
 }
+.sep { width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 2px; }
 #zoom-indicator {
   position: fixed;
   bottom: 20px;
@@ -109,6 +119,67 @@ body {
   letter-spacing: 1px;
   z-index: 100;
 }
+#undo-indicator {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  color: rgba(0,255,136,0.3);
+  letter-spacing: 1px;
+  z-index: 100;
+}
+#glow-control {
+  position: fixed;
+  bottom: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 1px;
+}
+#glow-slider {
+  -webkit-appearance: none;
+  width: 80px;
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  outline: none;
+}
+#glow-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #00ff88;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 6px #00ff88;
+}
+#color-theme-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 1px;
+}
+#theme-btns {
+  display: flex;
+  gap: 4px;
+}
+.theme-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.theme-dot:hover { transform: scale(1.3); }
+.theme-dot.active { border-color: #fff; box-shadow: 0 0 8px currentColor; }
 .txt-node {
   position: absolute;
   pointer-events: all;
@@ -148,7 +219,7 @@ body {
   border: 1px solid rgba(212,168,83,0.5);
   border-radius: 4px;
   padding: 24px;
-  width: 340px;
+  width: 380px;
   box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(212,168,83,0.15);
 }
 #text-input-modal h3 {
@@ -178,6 +249,65 @@ body {
   margin-top: 12px;
 }
 #text-input-modal .modal-btns .btn { flex: 1; text-align: center; }
+.modal-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+.modal-row label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.modal-row select, .modal-row input[type="range"] {
+  flex: 1;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(212,168,83,0.3);
+  border-radius: 2px;
+  color: #D4A853;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  padding: 4px 6px;
+  outline: none;
+  cursor: pointer;
+}
+.modal-row select option { background: #0a0a0a; }
+#font-size-slider {
+  -webkit-appearance: none;
+  width: 80px;
+  height: 3px;
+  background: rgba(212,168,83,0.3);
+  border-radius: 2px;
+  outline: none;
+}
+#font-size-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #D4A853;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 6px #D4A853;
+}
+#font-size-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  color: #D4A853;
+  min-width: 28px;
+}
+#symm-indicator {
+  position: fixed;
+  top: 60px;
+  left: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  color: rgba(212,168,83,0.4);
+  letter-spacing: 1px;
+  z-index: 100;
+}
 </style>
 </head>
 <body>
@@ -191,20 +321,44 @@ body {
 
 <div id="coords">X: 0 Y: 0</div>
 <div id="zoom-indicator">ZOOM: 100%</div>
+<div id="undo-indicator">CTRL+Z: UNDO</div>
+<div id="symm-indicator">SYM: OFF</div>
+
+<div id="glow-control">
+  <span>GLOW</span>
+  <input type="range" id="glow-slider" min="0" max="30" value="8">
+</div>
 
 <div id="controls">
   <button class="btn active" id="mode-text">TEXT</button>
   <button class="btn" id="mode-draw">DRAW</button>
+  <button class="btn" id="mode-line">LINE</button>
+  <button class="btn" id="mode-erase">ERASE</button>
   <button class="btn" id="mode-shape">SHAPE</button>
   <button class="btn" id="mode-particle">PARTICLE</button>
-  <span id="mode-label">MODE: TEXT</span>
+  <span class="sep"></span>
+  <button class="btn btn-gold" id="btn-symm">SYM</button>
+  <span class="sep"></span>
   <button class="btn btn-gold" id="btn-clear">CLEAR</button>
   <button class="btn btn-gold" id="btn-export">EXPORT</button>
+  <span id="mode-label">MODE: TEXT</span>
 </div>
 
 <div id="text-input-modal">
   <h3>// PLACE TEXT</h3>
   <textarea id="modal-textarea" placeholder="type something..."></textarea>
+  <div class="modal-row">
+    <label>FONT</label>
+    <select id="modal-font">
+      <option value="'Space Mono'">Space Mono</option>
+      <option value="'Syncopate'">Syncopate</option>
+      <option value="'Orbitron'">Orbitron</option>
+      <option value="'Rajdhani'">Rajdhani</option>
+    </select>
+    <label>SIZE</label>
+    <input type="range" id="font-size-slider" min="8" max="72" value="13">
+    <span id="font-size-val">13px</span>
+  </div>
   <div class="modal-btns">
     <button class="btn" id="modal-cancel">CANCEL</button>
     <button class="btn btn-gold" id="modal-confirm">PLACE</button>
@@ -213,7 +367,7 @@ body {
 
 <script>
 // ============================================================
-// VOID CANVAS
+// VOID CANVAS v2
 // ============================================================
 
 const starsEl = document.getElementById('stars');
@@ -235,9 +389,24 @@ window.addEventListener('resize', resize);
 let viewX = 0, viewY = 0, zoom = 1;
 const MIN_ZOOM = 0.1, MAX_ZOOM = 8;
 
+// Glow intensity
+let glowIntensity = 8;
+
+// Color themes: each defines drawColor, shapeColor, particleColors
+const themes = {
+  NEON: { primary: '#00ff88', secondary: '#00ff88', bg: '#0a0a0a' },
+  GOLD: { primary: '#D4A853', secondary: '#D4A853', bg: '#0a0a0a' },
+  CYBER: { primary: '#00d4ff', secondary: '#ff00aa', bg: '#050510' },
+  VOID: { primary: '#8844ff', secondary: '#ff4488', bg: '#050508' },
+  FLAME: { primary: '#ff6600', secondary: '#ffcc00', bg: '#0a0500' },
+};
+let currentTheme = 'NEON';
+let drawColor = themes.NEON.primary;
+let shapeColor = themes.NEON.secondary;
+
 // Stars background
 const stars = [];
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 250; i++) {
   stars.push({
     x: Math.random() * 4000 - 2000,
     y: Math.random() * 4000 - 2000,
@@ -247,7 +416,6 @@ for (let i = 0; i < 200; i++) {
   });
 }
 
-// Draw stars (always screen space)
 function drawStars(t) {
   starsCtx.clearRect(0, 0, W, H);
   for (const s of stars) {
@@ -272,7 +440,7 @@ class Particle {
     this.life = opts.life || 120;
     this.maxLife = this.life;
     this.r = opts.r || Math.random() * 3 + 1;
-    this.color = opts.color || (Math.random() > 0.5 ? '#00ff88' : '#D4A853');
+    this.color = opts.color || themes[currentTheme].primary;
     this.gravity = opts.gravity || 0;
     this.friction = opts.friction || 0.99;
   }
@@ -292,15 +460,15 @@ class Particle {
     if (r < 0.3) return;
     ctx.beginPath();
     ctx.arc(sx, sy, r, 0, Math.PI * 2);
-    ctx.fillStyle = this.color.replace(')', `,${alpha})`).replace('rgb', 'rgba').replace('##', '#');
-    // handle hex
     if (this.color.startsWith('#')) {
       const rr = parseInt(this.color.slice(1,3),16);
       const gg = parseInt(this.color.slice(3,5),16);
       const bb = parseInt(this.color.slice(5,7),16);
       ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
+    } else {
+      ctx.fillStyle = this.color.replace(')', `,${alpha})`).replace('rgb', 'rgba');
     }
-    ctx.shadowBlur = 8 * zoom;
+    ctx.shadowBlur = glowIntensity * zoom;
     ctx.shadowColor = this.color;
     ctx.fill();
     ctx.shadowBlur = 0;
@@ -310,20 +478,22 @@ class Particle {
 // Drawing paths
 const paths = [];
 let currentPath = null;
-let drawColor = '#00ff88';
 let drawWidth = 2;
+
+// Line (straight line tool)
+let lineStart = null;
+let currentLine = null;
 
 // Shapes
 const shapes = [];
-let shapeType = 'circle'; // circle, rect, tri, hex
-let shapeColor = '#D4A853';
+let shapeType = 'circle';
 
 function addShape(x, y) {
   const types = ['circle', 'rect', 'tri', 'hex'];
   const t = types[Math.floor(Math.random() * types.length)];
   const size = (Math.random() * 40 + 20) * zoom;
   shapes.push({ x, y, type: t, size, color: shapeColor, rotation: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.04 });
-  if (shapes.length > 60) shapes.shift();
+  if (shapes.length > 80) shapes.shift();
 }
 
 function drawShape(ctx, s) {
@@ -334,7 +504,7 @@ function drawShape(ctx, s) {
   ctx.rotate(s.rotation);
   ctx.strokeStyle = s.color;
   ctx.lineWidth = 1.5 * zoom;
-  ctx.shadowBlur = 10;
+  ctx.shadowBlur = glowIntensity;
   ctx.shadowColor = s.color;
   ctx.beginPath();
   if (s.type === 'circle') {
@@ -363,42 +533,83 @@ function drawShape(ctx, s) {
 const textNodes = [];
 let pendingTextPos = null;
 let focusedNode = null;
+let pendingFontSize = 13;
+let pendingFont = "'Space Mono'";
 
 // Mode
-let mode = 'text'; // text, draw, shape, particle
+let mode = 'text';
+let symmetryMode = false;
 
 // Pan state
 let isPanning = false;
 let panStartX = 0, panStartY = 0;
 let panViewStartX = 0, panViewStartY = 0;
-let didPan = false;
 
 // Drag text node
 let draggingNode = null;
 let dragOffsetX = 0, dragOffsetY = 0;
 
-// Mouse position in world coords
-function screenToWorld(sx, sy) {
-  return {
-    x: (sx - W / 2) / zoom + viewX,
-    y: (sy - H / 2) / zoom + viewY
-  };
+// Undo system
+const undoStack = [];
+const MAX_UNDO = 50;
+
+function pushUndo(type, data) {
+  undoStack.push({ type, data, timestamp: Date.now() });
+  if (undoStack.length > MAX_UNDO) undoStack.shift();
 }
 
-function worldToScreen(wx, wy) {
-  return {
-    x: (wx - viewX) * zoom + W / 2,
-    y: (wy - viewY) * zoom + H / 2
-  };
-}
-
-// Get pointer position (handles both mouse and touch)
-function getEventXY(e) {
-  if (e.touches && e.touches.length > 0) {
-    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+function popUndo() {
+  if (undoStack.length === 0) return;
+  const action = undoStack.pop();
+  if (action.type === 'shape') {
+    const idx = shapes.findIndex(s => s === action.data);
+    if (idx !== -1) shapes.splice(idx, 1);
+  } else if (action.type === 'path') {
+    const idx = paths.findIndex(p => p === action.data);
+    if (idx !== -1) paths.splice(idx, 1);
+  } else if (action.type === 'text') {
+    const idx = textNodes.findIndex(n => n === action.data);
+    if (idx !== -1) {
+      action.data.el.remove();
+      textNodes.splice(idx, 1);
+    }
+  } else if (action.type === 'particle_burst') {
+    // remove last N particles
+    for (let i = 0; i < action.data.count; i++) {
+      particles.pop();
+    }
+  } else if (action.type === 'clear') {
+    // restore everything
+    for (const s of action.data.shapes) shapes.push(s);
+    for (const p of action.data.paths) paths.push(p);
+    for (const n of action.data.textNodes) {
+      textLayer.appendChild(n.el);
+      textNodes.push(n);
+    }
   }
+}
+
+// Screen/world coords
+function screenToWorld(sx, sy) {
+  return { x: (sx - W / 2) / zoom + viewX, y: (sy - H / 2) / zoom + viewY };
+}
+function worldToScreen(wx, wy) {
+  return { x: (wx - viewX) * zoom + W / 2, y: (wy - viewY) * zoom + H / 2 };
+}
+
+// Mirror point for symmetry
+function mirrorPoint(x, y) {
+  return { x: 2 * viewX - x, y: 2 * viewY - y };
+}
+
+function getEventXY(e) {
+  if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
   return { x: e.clientX, y: e.clientY };
 }
+
+// Eraser state
+let erasing = false;
+let eraseRadius = 25;
 
 layerEl.addEventListener('mousedown', e => {
   if (e.target !== layerEl) return;
@@ -417,21 +628,79 @@ function handlePointerDown(sx, sy) {
     pendingTextPos = { x: wx, y: wy };
     showTextModal();
   } else if (mode === 'draw') {
-    isPanning = false;
-    didPan = false;
     currentPath = { points: [{ x: wx, y: wy }], color: drawColor, width: drawWidth };
     paths.push(currentPath);
+    if (symmetryMode) {
+      const m = mirrorPoint(wx, wy);
+      const mPath = { points: [{ x: m.x, y: m.y }], color: drawColor, width: drawWidth };
+      paths.push(mPath);
+      currentPath.mirrorPair = mPath;
+      currentPath = mPath;
+    }
+  } else if (mode === 'line') {
+    lineStart = { x: wx, y: wy };
+    currentLine = { start: { x: wx, y: wy }, end: { x: wx, y: wy }, color: drawColor, width: drawWidth };
+    if (symmetryMode) {
+      const m = mirrorPoint(wx, wy);
+      currentLine.mirrorLine = { start: { x: m.x, y: m.y }, end: { x: m.x, y: m.y }, color: drawColor, width: drawWidth };
+    }
+  } else if (mode === 'erase') {
+    erasing = true;
+    eraseAt(wx, wy);
   } else if (mode === 'shape') {
     addShape(wx, wy);
-    burstParticles(wx, wy, 6, shapeColor);
+    pushUndo('shape', shapes[shapes.length - 1]);
+    if (symmetryMode) {
+      const m = mirrorPoint(wx, wy);
+      const types = ['circle', 'rect', 'tri', 'hex'];
+      const t = types[Math.floor(Math.random() * types.length)];
+      const size = (Math.random() * 40 + 20) * zoom;
+      const s2 = { x: m.x, y: m.y, type: t, size, color: shapeColor, rotation: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.04 };
+      shapes.push(s2);
+      pushUndo('shape', s2);
+    }
+    burstParticles(wx, wy, 8, shapeColor);
   } else if (mode === 'particle') {
-    for (let i = 0; i < 30; i++) {
+    const count = 30;
+    for (let i = 0; i < count; i++) {
       particles.push(new Particle(wx, wy, {
         vx: (Math.random() - 0.5) * 8,
         vy: (Math.random() - 0.5) * 8,
-        color: Math.random() > 0.5 ? '#00ff88' : '#D4A853',
+        color: Math.random() > 0.5 ? themes[currentTheme].primary : themes[currentTheme].secondary,
         life: 80 + Math.random() * 60
       }));
+    }
+    pushUndo('particle_burst', { count });
+  }
+}
+
+function eraseAt(wx, wy) {
+  let erased = false;
+  for (let i = shapes.length - 1; i >= 0; i--) {
+    const s = shapes[i];
+    const dx = s.x - wx, dy = s.y - wy;
+    if (Math.sqrt(dx*dx + dy*dy) < eraseRadius / zoom) {
+      pushUndo('shape', s);
+      shapes.splice(i, 1);
+      erased = true;
+    }
+  }
+  for (let i = paths.length - 1; i >= 0; i--) {
+    const p = paths[i];
+    for (const pt of p.points) {
+      const dx = pt.x - wx, dy = pt.y - wy;
+      if (Math.sqrt(dx*dx + dy*dy) < eraseRadius / zoom) {
+        pushUndo('path', p);
+        paths.splice(i, 1);
+        erased = true;
+        break;
+      }
+    }
+  }
+  if (erased) {
+    // mini burst
+    for (let i = 0; i < 5; i++) {
+      particles.push(new Particle(wx, wy, { vx: (Math.random()-0.5)*4, vy: (Math.random()-0.5)*4, color: '#ff4444', life: 20, r: 2 }));
     }
   }
 }
@@ -440,6 +709,11 @@ function showTextModal() {
   document.getElementById('text-input-modal').style.display = 'block';
   const ta = document.getElementById('modal-textarea');
   ta.value = '';
+  pendingFont = "'Space Mono'";
+  pendingFontSize = 13;
+  document.getElementById('modal-font').value = pendingFont;
+  document.getElementById('font-size-slider').value = 13;
+  document.getElementById('font-size-val').textContent = '13px';
   ta.focus();
 }
 
@@ -447,7 +721,6 @@ document.getElementById('modal-cancel').onclick = () => {
   document.getElementById('text-input-modal').style.display = 'none';
   pendingTextPos = null;
 };
-
 document.getElementById('modal-confirm').onclick = () => {
   const val = document.getElementById('modal-textarea').value.trim();
   if (val && pendingTextPos) {
@@ -456,31 +729,32 @@ document.getElementById('modal-confirm').onclick = () => {
   document.getElementById('text-input-modal').style.display = 'none';
   pendingTextPos = null;
 };
-
 document.getElementById('modal-textarea').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    document.getElementById('modal-confirm').click();
-  }
-  if (e.key === 'Escape') {
-    document.getElementById('modal-cancel').click();
-  }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('modal-confirm').click(); }
+  if (e.key === 'Escape') { document.getElementById('modal-cancel').click(); }
+});
+document.getElementById('font-size-slider').addEventListener('input', e => {
+  pendingFontSize = parseInt(e.target.value);
+  document.getElementById('font-size-val').textContent = pendingFontSize + 'px';
+});
+document.getElementById('modal-font').addEventListener('change', e => {
+  pendingFont = e.target.value;
 });
 
 function createTextNode(content, wx, wy) {
   const el = document.createElement('div');
   el.className = 'txt-node';
   el.textContent = content;
+  el.style.fontFamily = pendingFont;
+  el.style.fontSize = pendingFontSize + 'px';
   textLayer.appendChild(el);
-  const node = { el, wx, wy };
+  const node = { el, wx, wy, font: pendingFont, fontSize: pendingFontSize };
   el._nodeData = node;
-
   const { x: sx, y: sy } = worldToScreen(wx, wy);
   el.style.left = sx + 'px';
   el.style.top = sy + 'px';
   el.style.transform = 'translate(-50%,-50%)';
 
-  // Dragging
   el.addEventListener('mousedown', e => {
     e.stopPropagation();
     draggingNode = node;
@@ -489,20 +763,33 @@ function createTextNode(content, wx, wy) {
     dragOffsetX = e.clientX - sx2;
     dragOffsetY = e.clientY - sy2;
   });
-
   el.addEventListener('focus', () => { el.classList.add('focused'); focusedNode = node; });
-  el.addEventListener('blur', () => { el.classList.remove('focused'); focusedNode = null; saveNodeContent(el); });
-
-  // Resize observer to update position
-  const ro = new ResizeObserver(() => {});
-  ro.observe(el);
+  el.addEventListener('blur', () => { el.classList.remove('focused'); focusedNode = null; });
 
   textNodes.push(node);
+  pushUndo('text', node);
+  if (symmetryMode) {
+    const m = mirrorPoint(wx, wy);
+    const el2 = el.cloneNode(true);
+    el2.style.left = worldToScreen(m.x, m.y).x + 'px';
+    el2.style.top = worldToScreen(m.x, m.y).y + 'px';
+    textLayer.appendChild(el2);
+    const node2 = { el: el2, wx: m.x, wy: m.y, font: pendingFont, fontSize: pendingFontSize };
+    el2._nodeData = node2;
+    el2.addEventListener('mousedown', e => {
+      e.stopPropagation();
+      draggingNode = node2;
+      el2.classList.add('dragging');
+      const { x: sx2, y: sy2 } = worldToScreen(m.x, m.y);
+      dragOffsetX = e.clientX - sx2;
+      dragOffsetY = e.clientY - sy2;
+    });
+    el2.addEventListener('focus', () => { el2.classList.add('focused'); focusedNode = node2; });
+    el2.addEventListener('blur', () => { el2.classList.remove('focused'); focusedNode = null; });
+    textNodes.push(node2);
+    pushUndo('text', node2);
+  }
   return node;
-}
-
-function saveNodeContent(el) {
-  // Content is auto-saved via textContent
 }
 
 document.addEventListener('mousemove', e => {
@@ -515,13 +802,14 @@ document.addEventListener('mousemove', e => {
     draggingNode.el.style.left = sx + 'px';
     draggingNode.el.style.top = sy + 'px';
   }
-});
-
-document.addEventListener('mouseup', () => {
-  if (draggingNode) {
-    draggingNode.el.classList.remove('dragging');
-    draggingNode = null;
+  if (erasing && mode === 'erase') {
+    const { x: wx, y: wy } = screenToWorld(e.clientX, e.clientY);
+    eraseAt(wx, wy);
   }
+});
+document.addEventListener('mouseup', () => {
+  if (draggingNode) { draggingNode.el.classList.remove('dragging'); draggingNode = null; }
+  if (erasing) { erasing = false; }
 });
 
 layerEl.addEventListener('mousemove', e => {
@@ -534,43 +822,40 @@ layerEl.addEventListener('touchmove', e => {
 }, { passive: true });
 
 function handlePointerMove(sx, sy) {
-  // Pan with right mouse or middle mouse or space+drag
-  if (e && e.buttons === 2) {
-    // right-click pan disabled
-  }
-
   if (currentPath) {
     const { x: wx, y: wy } = screenToWorld(sx, sy);
     currentPath.points.push({ x: wx, y: wy });
+    if (currentPath.mirrorPair) {
+      const m = mirrorPoint(wx, wy);
+      currentPath.mirrorPair.points.push({ x: m.x, y: m.y });
+    }
+  }
+  if (currentLine && lineStart) {
+    const { x: wx, y: wy } = screenToWorld(sx, sy);
+    currentLine.end = { x: wx, y: wy };
+    if (currentLine.mirrorLine) {
+      const m = mirrorPoint(wx, wy);
+      currentLine.mirrorLine.end = { x: m.x, y: m.y };
+    }
   }
 }
 
 document.addEventListener('mousedown', e => {
   if (e.button === 1 || (e.button === 0 && e.getModifierState && e.getModifierState('Shift'))) {
-    // Middle click or shift+left = pan
     isPanning = true;
-    didPan = false;
     panStartX = e.clientX; panStartY = e.clientY;
     panViewStartX = viewX; panViewStartY = viewY;
     e.preventDefault();
-  }
-  if (e.button === 0 && e.getModifierState && e.getModifierState('Space')) {
-    isPanning = true;
-    didPan = false;
-    panStartX = e.clientX; panStartY = e.clientY;
-    panViewStartX = viewX; panViewStartY = viewY;
   }
 });
 
 document.addEventListener('mousemove', e => {
   if (isPanning) {
-    didPan = true;
     const dx = (e.clientX - panStartX) / zoom;
     const dy = (e.clientY - panStartY) / zoom;
     viewX = panViewStartX - dx;
     viewY = panViewStartY - dy;
   }
-  // Update coords display
   const { x: wx, y: wy } = screenToWorld(e.clientX, e.clientY);
   document.getElementById('coords').textContent = `X: ${Math.round(wx)} Y: ${Math.round(wy)}`;
 });
@@ -579,7 +864,15 @@ document.addEventListener('mouseup', e => {
   if (isPanning) isPanning = false;
 });
 
-// Zoom
+// Commit line on mouseup
+document.addEventListener('mouseup', e => {
+  if (currentLine && lineStart) {
+    // line is already in paths array via the drawing
+    currentLine = null;
+    lineStart = null;
+  }
+});
+
 layerEl.addEventListener('wheel', e => {
   e.preventDefault();
   const { x: sx, y: sy } = getEventXY(e);
@@ -591,20 +884,13 @@ layerEl.addEventListener('wheel', e => {
   document.getElementById('zoom-indicator').textContent = `ZOOM: ${Math.round(zoom * 100)}%`;
 }, { passive: false });
 
-// Burst particles helper
 function burstParticles(x, y, count, color) {
   for (let i = 0; i < count; i++) {
-    particles.push(new Particle(x, y, {
-      vx: (Math.random() - 0.5) * 6,
-      vy: (Math.random() - 0.5) * 6,
-      color,
-      life: 40 + Math.random() * 30,
-      friction: 0.96
-    }));
+    particles.push(new Particle(x, y, { vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6, color, life: 40 + Math.random() * 30, friction: 0.96 }));
   }
 }
 
-// Draw paths in world space
+// Draw paths
 function drawPaths(ctx) {
   for (const path of paths) {
     if (path.points.length < 2) continue;
@@ -619,21 +905,42 @@ function drawPaths(ctx) {
     ctx.lineWidth = path.width * zoom;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.shadowBlur = 6;
+    ctx.shadowBlur = glowIntensity;
     ctx.shadowColor = path.color;
     ctx.stroke();
     ctx.shadowBlur = 0;
   }
 }
 
-// Draw shapes in world space
-function drawShapes(ctx) {
-  for (const s of shapes) {
-    drawShape(ctx, s);
+// Draw current line preview
+function drawCurrentLine(ctx) {
+  if (!currentLine || !lineStart) return;
+  const s = worldToScreen(currentLine.start.x, currentLine.start.y);
+  const e = worldToScreen(currentLine.end.x, currentLine.end.y);
+  ctx.beginPath();
+  ctx.moveTo(s.x, s.y);
+  ctx.lineTo(e.x, e.y);
+  ctx.strokeStyle = currentLine.color;
+  ctx.lineWidth = currentLine.width * zoom;
+  ctx.shadowBlur = glowIntensity;
+  ctx.shadowColor = currentLine.color;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  // Draw mirror
+  if (currentLine.mirrorLine) {
+    const ms = worldToScreen(currentLine.mirrorLine.start.x, currentLine.mirrorLine.start.y);
+    const me = worldToScreen(currentLine.mirrorLine.end.x, currentLine.mirrorLine.end.y);
+    ctx.beginPath();
+    ctx.moveTo(ms.x, ms.y);
+    ctx.lineTo(me.x, me.y);
+    ctx.stroke();
   }
 }
 
-// Update text node positions
+function drawShapes(ctx) {
+  for (const s of shapes) drawShape(ctx, s);
+}
+
 function updateTextNodes() {
   for (const node of textNodes) {
     const { x: sx, y: sy } = worldToScreen(node.wx, node.wy);
@@ -645,30 +952,20 @@ function updateTextNodes() {
   }
 }
 
-// Ambient particle spawning
 let ambientTimer = 0;
 
-// Main loop
-let frameCount = 0;
 function loop(t) {
   requestAnimationFrame(loop);
-  frameCount++;
 
-  // Clear layers
   layerCtx.clearRect(0, 0, W, H);
 
-  // Update shapes rotation
-  for (const s of shapes) {
-    s.rotation += s.rotSpeed;
-  }
+  for (const s of shapes) s.rotation += s.rotSpeed;
 
-  // Update particles
   for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].update();
     if (particles[i].life <= 0) particles.splice(i, 1);
   }
 
-  // Ambient particles
   ambientTimer++;
   if (ambientTimer > 30 && particles.length < 150) {
     ambientTimer = 0;
@@ -679,35 +976,29 @@ function loop(t) {
       vy: (Math.random() - 0.5) * 0.5,
       r: Math.random() * 1.5 + 0.5,
       life: 200 + Math.random() * 100,
-      color: Math.random() > 0.7 ? '#D4A853' : '#00ff88',
+      color: Math.random() > 0.7 ? themes[currentTheme].secondary : themes[currentTheme].primary,
       friction: 0.999,
       gravity: 0
     }));
   }
 
-  // Draw shapes
   drawShapes(layerCtx);
-
-  // Draw paths
   drawPaths(layerCtx);
+  drawCurrentLine(layerCtx);
 
-  // Draw particles
-  for (const p of particles) {
-    p.draw(layerCtx);
-  }
+  for (const p of particles) p.draw(layerCtx);
 
-  // Update text nodes
   updateTextNodes();
-
-  // Draw stars
   drawStars(t);
 }
 requestAnimationFrame(loop);
 
-// Buttons
+// UI Buttons
 const modeButtons = [
   { id: 'mode-text', label: 'TEXT', mode: 'text' },
   { id: 'mode-draw', label: 'DRAW', mode: 'draw' },
+  { id: 'mode-line', label: 'LINE', mode: 'line' },
+  { id: 'mode-erase', label: 'ERASE', mode: 'erase' },
   { id: 'mode-shape', label: 'SHAPE', mode: 'shape' },
   { id: 'mode-particle', label: 'PARTICLE', mode: 'particle' }
 ];
@@ -722,7 +1013,20 @@ for (const mb of modeButtons) {
   };
 }
 
+document.getElementById('btn-symm').onclick = () => {
+  symmetryMode = !symmetryMode;
+  document.getElementById('btn-symm').classList.toggle('active', symmetryMode);
+  document.getElementById('symm-indicator').textContent = `SYM: ${symmetryMode ? 'ON' : 'OFF'}`;
+  document.getElementById('symm-indicator').style.color = symmetryMode ? 'rgba(0,255,136,0.7)' : 'rgba(212,168,83,0.4)';
+};
+
 document.getElementById('btn-clear').onclick = () => {
+  if (shapes.length === 0 && paths.length === 0 && textNodes.length === 0) return;
+  pushUndo('clear', {
+    shapes: [...shapes],
+    paths: [...paths],
+    textNodes: [...textNodes]
+  });
   shapes.length = 0;
   paths.length = 0;
   particles.length = 0;
@@ -732,7 +1036,7 @@ document.getElementById('btn-clear').onclick = () => {
 
 document.getElementById('btn-export').onclick = () => {
   const data = {
-    textNodes: textNodes.map(n => ({ content: n.el.textContent, x: n.wx, y: n.wy })),
+    textNodes: textNodes.map(n => ({ content: n.el.textContent, x: n.wx, y: n.wy, font: n.font, fontSize: n.fontSize })),
     shapes: shapes.map(s => ({ ...s })),
     paths: paths.map(p => ({ ...p }))
   };
@@ -743,23 +1047,64 @@ document.getElementById('btn-export').onclick = () => {
   a.click();
 };
 
+// Glow slider
+document.getElementById('glow-slider').addEventListener('input', e => {
+  glowIntensity = parseInt(e.target.value);
+});
+
+// Theme dots
+const themeColors = {
+  NEON: '#00ff88',
+  GOLD: '#D4A853',
+  CYBER: '#00d4ff',
+  VOID: '#8844ff',
+  FLAME: '#ff6600'
+};
+
 // Keyboard shortcuts
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
-  if (e.key === '1') { document.getElementById('mode-text').click(); }
-  if (e.key === '2') { document.getElementById('mode-draw').click(); }
-  if (e.key === '3') { document.getElementById('mode-shape').click(); }
-  if (e.key === '4') { document.getElementById('mode-particle').click(); }
+  if (e.key === '1') document.getElementById('mode-text').click();
+  if (e.key === '2') document.getElementById('mode-draw').click();
+  if (e.key === '3') document.getElementById('mode-line').click();
+  if (e.key === '4') document.getElementById('mode-erase').click();
+  if (e.key === '5') document.getElementById('mode-shape').click();
+  if (e.key === '6') document.getElementById('mode-particle').click();
+  if ((e.key === 'z' || e.key === 'Z') && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    popUndo();
+  }
+  if (e.key === 's' || e.key === 'S') {
+    if (!e.ctrlKey && !e.metaKey) {
+      symmetryMode = !symmetryMode;
+      document.getElementById('btn-symm').classList.toggle('active', symmetryMode);
+      document.getElementById('symm-indicator').textContent = `SYM: ${symmetryMode ? 'ON' : 'OFF'}`;
+      document.getElementById('symm-indicator').style.color = symmetryMode ? 'rgba(0,255,136,0.7)' : 'rgba(212,168,83,0.4)';
+    }
+  }
   if (e.key === 'c' || e.key === 'C') { if (!e.ctrlKey && !e.metaKey) document.getElementById('btn-clear').click(); }
-  if (e.key === 'e' || e.key === 'E') { document.getElementById('btn-export').click(); }
+  if (e.key === 'e' || e.key === 'E') { if (!e.ctrlKey && !e.metaKey) document.getElementById('btn-export').click(); }
   if (e.key === 'r' || e.key === 'R') {
     viewX = 0; viewY = 0; zoom = 1;
     document.getElementById('zoom-indicator').textContent = 'ZOOM: 100%';
   }
+  // Theme shortcuts T/1-5
+  if (e.key === 't' || e.key === 'T') {
+    currentTheme = currentTheme === 'NEON' ? 'GOLD' : 'NEON';
+    drawColor = themes[currentTheme].primary;
+    shapeColor = themes[currentTheme].secondary;
+  }
 });
 
-// Disable right-click context
-document.addEventListener('contextmenu', e => e.preventDefault());
+document.getElementById('contextmenu', e => e.preventDefault());
+
+// Touch support for line tool: commit line on touch end
+layerEl.addEventListener('touchend', e => {
+  if (currentLine && lineStart) {
+    currentLine = null;
+    lineStart = null;
+  }
+}, { passive: true });
 </script>
 </body>
 </html>
